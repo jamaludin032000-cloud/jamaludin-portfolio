@@ -6,7 +6,6 @@ import {
   useEffect,
   useMemo,
   useState,
-  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
@@ -16,6 +15,7 @@ import {
   type Language,
 } from "./dictionary";
 
+
 type ContextType = {
   language: Language;
   setLanguage: (language: Language) => void;
@@ -23,42 +23,66 @@ type ContextType = {
   mounted: boolean;
 };
 
-const LanguageContext = createContext<ContextType | null>(null);
+
+const LanguageContext =
+  createContext<ContextType | null>(null);
+
+
 
 type LanguageProviderProps = {
   children: ReactNode;
 };
 
+
+
 export function LanguageProvider({
   children,
 }: LanguageProviderProps) {
-  const [language, setLanguage] = useState<Language>(() => {
-    if (typeof window === "undefined") {
-      return "id";
+
+
+  // Selalu sama antara server dan client
+  const [language, setLanguageState] =
+    useState<Language>("id");
+
+
+  const [mounted, setMounted] =
+    useState(false);
+
+
+
+  // Ambil bahasa setelah client mounted
+  useEffect(() => {
+
+    const saved =
+      window.localStorage.getItem("language");
+
+
+    if (
+      saved === "id" ||
+      saved === "en"
+    ) {
+      setLanguageState(saved);
     }
 
-    const saved = window.localStorage.getItem("language");
 
-    return saved === "id" || saved === "en"
-      ? saved
-      : "id";
-  });
+    setMounted(true);
 
-  // React 19 replacement untuk mounted state
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
+  }, []);
 
-  useEffect(() => {
-    if (!mounted) return;
+
+
+  function setLanguage(language: Language){
+
+    setLanguageState(language);
 
     window.localStorage.setItem(
       "language",
       language
     );
-  }, [language, mounted]);
+
+  }
+
+
 
   const value = useMemo(
     () => ({
@@ -67,24 +91,39 @@ export function LanguageProvider({
       mounted,
       t: dictionaries[language],
     }),
-    [language, mounted]
+    [
+      language,
+      mounted,
+    ]
   );
+
+
 
   return (
     <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );
+
 }
 
+
+
 export function useLanguage(): ContextType {
-  const context = useContext(LanguageContext);
+
+  const context =
+    useContext(LanguageContext);
+
 
   if (!context) {
+
     throw new Error(
       "useLanguage must be used inside LanguageProvider."
     );
+
   }
 
+
   return context;
+
 }
