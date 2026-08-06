@@ -40,7 +40,17 @@ Personal portfolio website built with Next.js, TypeScript, and Tailwind CSS.
 
 ## Preview
 
-![Portfolio Preview](./public/screenshots/portfolio-home.png)
+### Home
+![Home Preview](./public/screenshots/home.png)
+
+### About
+![About Preview](./public/screenshots/about.png)
+
+### Projects
+![Projects Preview](./public/screenshots/projects.png)
+
+### Contact
+![Contact Preview](./public/screenshots/contact.png)
 
 
 ## Features
