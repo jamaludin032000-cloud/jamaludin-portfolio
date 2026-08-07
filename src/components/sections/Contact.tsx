@@ -4,7 +4,7 @@ import { motion, type Variants } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageProvider";
 import { useState, type FormEvent } from "react";
 
-type Status = "idle" | "sending" | "sent";
+type Status = "idle" | "sending" | "sent" | "error";
 
 // ======================================================
 // GRAIN TEXTURE
@@ -236,8 +236,13 @@ export default function Contact() {
 
   const [status, setStatus] = useState<Status>("idle");
   const [copied, setCopied] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const email = "jamaludin032000@gmail.com";
+
+  // ====================================================
+  // CONTACT INFORMATION
+  // ====================================================
 
   const contactInfo = [
     {
@@ -292,6 +297,10 @@ export default function Contact() {
     },
   ];
 
+  // ====================================================
+  // SOCIAL MEDIA
+  // ====================================================
+
   const socials = [
     {
       name: "GitHub",
@@ -315,64 +324,114 @@ export default function Contact() {
     },
   ];
 
+  // ====================================================
+  // COPY EMAIL
+  // ====================================================
+
   const handleCopy = async (value: string) => {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         setCopied(false);
       }, 1800);
-    } catch {
+    } catch (error) {
+      console.error("Copy failed:", error);
       setCopied(false);
     }
   };
+
+  // ====================================================
+  // SUBMIT CONTACT FORM
+  // ====================================================
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const form = e.currentTarget;
 
+    if (status === "sending") {
+      return;
+    }
+
     setStatus("sending");
+    setErrorMessage("");
 
     const formData = new FormData(form);
 
-    const data = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      subject: formData.get("subject"),
-      message: formData.get("message"),
-    };
+    const name = String(formData.get("name") ?? "").trim();
+    const visitorEmail = String(formData.get("email") ?? "")
+      .trim()
+      .toLowerCase();
+    const subject = String(formData.get("subject") ?? "").trim();
+    const message = String(formData.get("message") ?? "").trim();
+
+    if (!name || !visitorEmail || !subject || !message) {
+      setStatus("error");
+      setErrorMessage("Semua field wajib diisi.");
+
+      return;
+    }
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          name,
+          email: visitorEmail,
+          subject,
+          message,
+        }),
       });
 
-      const result = await response.json();
+      let result: {
+        success?: boolean;
+        message?: string;
+        error?: string;
+      } = {};
+
+      try {
+        result = await response.json();
+      } catch {
+        result = {};
+      }
 
       if (!response.ok) {
-        throw new Error(result.error || "Gagal mengirim pesan.");
+        throw new Error(
+          result.error ||
+            result.message ||
+            "Pesan gagal dikirim. Silakan coba lagi.",
+        );
       }
 
       setStatus("sent");
+      setErrorMessage("");
       form.reset();
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         setStatus("idle");
-      }, 3000);
+      }, 4000);
     } catch (error) {
-      console.error(error);
+      console.error("Contact form error:", error);
 
-      setStatus("idle");
+      setStatus("error");
 
-      alert("Pesan gagal dikirim. Silakan coba lagi.");
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Pesan gagal dikirim. Silakan coba lagi.",
+      );
     }
   };
+
+  // ====================================================
+  // RENDER
+  // ====================================================
 
   return (
     <section
@@ -427,7 +486,7 @@ export default function Contact() {
       />
 
       <motion.div
-        className="pointer-events-none absolute bottom-[15%] right-[8%] h-64 w-64 rounded-full bg-[#5EEAD4]/2.5 blur-[100px]"
+        className="pointer-events-none absolute bottom-[15%] right-[8%] h-64 w-64 rounded-full bg-[#5EEAD4]/[0.025] blur-[100px]"
         aria-hidden="true"
         animate={{
           x: [0, -40, 0],
@@ -444,7 +503,6 @@ export default function Contact() {
       {/* Content */}
 
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-28 lg:px-12">
-
         {/* Header */}
 
         <motion.div
@@ -514,7 +572,6 @@ export default function Contact() {
           {/* Left Column */}
 
           <div className="space-y-4 lg:col-span-2">
-
             {/* Contact Info */}
 
             <motion.div
@@ -526,7 +583,7 @@ export default function Contact() {
                   ease: "easeOut",
                 },
               }}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-2 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/5 hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)]"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-2 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/[0.05] hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)]"
             >
               <div
                 className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#E8C468]/0 blur-3xl transition-all duration-500 group-hover:bg-[#E8C468]/10"
@@ -618,7 +675,7 @@ export default function Contact() {
                   duration: 0.25,
                 },
               }}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-6 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/5 hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)]"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/[0.05] hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)]"
             >
               <p className="mb-4 text-xs uppercase tracking-wider text-slate-500">
                 {t.contact.socials}
@@ -662,7 +719,8 @@ export default function Contact() {
           <motion.form
             variants={cardVariants}
             onSubmit={handleSubmit}
-            className="group relative overflow-hidden space-y-5 rounded-2xl border border-white/10 bg-white/3 p-6 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/5 hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)] sm:p-8 lg:col-span-3"
+            noValidate={false}
+            className="group relative overflow-hidden space-y-5 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/[0.05] hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)] sm:p-8 lg:col-span-3"
           >
             <div
               className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-[#E8C468]/0 blur-3xl transition-all duration-500 group-hover:bg-[#E8C468]/10"
@@ -675,20 +733,25 @@ export default function Contact() {
             />
 
             <div className="relative z-10">
-
               {/* Name */}
 
               <motion.div variants={formItemVariants}>
-                <label className="mb-2 block text-xs uppercase tracking-wider text-slate-500">
+                <label
+                  htmlFor="contact-name"
+                  className="mb-2 block text-xs uppercase tracking-wider text-slate-500"
+                >
                   {t.contact.form.placeholders.name}
                 </label>
 
                 <input
+                  id="contact-name"
                   name="name"
                   type="text"
+                  autoComplete="name"
                   placeholder={t.contact.form.placeholders.name}
                   className={inputClass}
                   required
+                  minLength={2}
                 />
               </motion.div>
 
@@ -698,13 +761,18 @@ export default function Contact() {
                 variants={formItemVariants}
                 className="mt-5"
               >
-                <label className="mb-2 block text-xs uppercase tracking-wider text-slate-500">
+                <label
+                  htmlFor="contact-email"
+                  className="mb-2 block text-xs uppercase tracking-wider text-slate-500"
+                >
                   {t.contact.form.placeholders.email}
                 </label>
 
                 <input
+                  id="contact-email"
                   name="email"
                   type="email"
+                  autoComplete="email"
                   placeholder={t.contact.form.placeholders.email}
                   className={inputClass}
                   required
@@ -717,16 +785,21 @@ export default function Contact() {
                 variants={formItemVariants}
                 className="mt-5"
               >
-                <label className="mb-2 block text-xs uppercase tracking-wider text-slate-500">
+                <label
+                  htmlFor="contact-subject"
+                  className="mb-2 block text-xs uppercase tracking-wider text-slate-500"
+                >
                   {t.contact.form.placeholders.subject}
                 </label>
 
                 <input
+                  id="contact-subject"
                   name="subject"
                   type="text"
                   placeholder={t.contact.form.placeholders.subject}
                   className={inputClass}
                   required
+                  minLength={3}
                 />
               </motion.div>
 
@@ -736,32 +809,83 @@ export default function Contact() {
                 variants={formItemVariants}
                 className="mt-5"
               >
-                <label className="mb-2 block text-xs uppercase tracking-wider text-slate-500">
+                <label
+                  htmlFor="contact-message"
+                  className="mb-2 block text-xs uppercase tracking-wider text-slate-500"
+                >
                   {t.contact.form.placeholders.message}
                 </label>
 
                 <textarea
+                  id="contact-message"
                   name="message"
                   rows={6}
                   placeholder={t.contact.form.placeholders.message}
                   className={`${inputClass} resize-none`}
                   required
+                  minLength={10}
                 />
               </motion.div>
+
+              {/* Error */}
+
+              {status === "error" && errorMessage && (
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    y: 10,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  className="mt-5 rounded-xl border border-red-400/20 bg-red-400/5 px-4 py-3 text-sm leading-6 text-red-300"
+                  role="alert"
+                >
+                  {errorMessage}
+                </motion.div>
+              )}
+
+              {/* Success */}
+
+              {status === "sent" && (
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    y: 10,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  className="mt-5 rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-4 py-3 text-sm leading-6 text-emerald-300"
+                  role="status"
+                >
+                  {t.contact.form.success}
+                </motion.div>
+              )}
 
               {/* Submit */}
 
               <motion.button
                 variants={formItemVariants}
                 type="submit"
-                disabled={status !== "idle"}
-                whileHover={{
-                  scale: 1.02,
-                  y: -2,
-                }}
-                whileTap={{
-                  scale: 0.98,
-                }}
+                disabled={status === "sending"}
+                whileHover={
+                  status !== "sending"
+                    ? {
+                        scale: 1.02,
+                        y: -2,
+                      }
+                    : undefined
+                }
+                whileTap={
+                  status !== "sending"
+                    ? {
+                        scale: 0.98,
+                      }
+                    : undefined
+                }
                 className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#E8C468] py-3 font-semibold text-[#0A0A0F] transition-all duration-300 hover:bg-[#E8C468]/90 hover:shadow-lg hover:shadow-[rgba(232,196,104,0.3)] disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {status === "sending" && (
@@ -779,6 +903,7 @@ export default function Contact() {
                 {status === "idle" && t.contact.form.send}
                 {status === "sending" && t.contact.form.sending}
                 {status === "sent" && t.contact.form.success}
+                {status === "error" && t.contact.form.send}
               </motion.button>
             </div>
 
