@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -10,9 +9,13 @@ export async function POST(request: Request) {
     const { name, email, subject, message } = body;
 
     if (!name || !email || !subject || !message) {
-      return NextResponse.json(
-        { error: "Semua field wajib diisi." },
-        { status: 400 }
+      return Response.json(
+        {
+          error: "Semua field wajib diisi.",
+        },
+        {
+          status: 400,
+        },
       );
     }
 
@@ -22,38 +25,54 @@ export async function POST(request: Request) {
       replyTo: email,
       subject: `[Portfolio] ${subject}`,
       html: `
-        <h2>Pesan Baru dari Portfolio</h2>
+        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+          <h2>Pesan Baru dari Portfolio</h2>
 
-        <p><strong>Nama:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
+          <p><strong>Nama:</strong> ${name}</p>
 
-        <hr />
+          <p><strong>Email:</strong> ${email}</p>
 
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, "<br />")}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+
+          <hr />
+
+          <h3>Message</h3>
+
+          <p style="white-space: pre-wrap;">
+            ${message}
+          </p>
+        </div>
       `,
     });
 
     if (error) {
       console.error("Resend error:", error);
 
-      return NextResponse.json(
-        { error: "Gagal mengirim pesan." },
-        { status: 500 }
+      return Response.json(
+        {
+          error: "Gagal mengirim email.",
+        },
+        {
+          status: 500,
+        },
       );
     }
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
+      message: "Pesan berhasil dikirim.",
       data,
     });
   } catch (error) {
     console.error("Contact API error:", error);
 
-    return NextResponse.json(
-      { error: "Terjadi kesalahan server." },
-      { status: 500 }
+    return Response.json(
+      {
+        error: "Terjadi kesalahan pada server.",
+      },
+      {
+        status: 500,
+      },
     );
   }
 }
