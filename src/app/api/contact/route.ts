@@ -74,7 +74,7 @@ export async function POST(request: Request) {
       from: "Jamaludin Portfolio <onboarding@resend.dev>",
 
       // Email tujuan
-      to: ["jamaludin032000@gmail.com"],
+      to: ["jamaludin.032000@gmail.com"],
 
       // Ketika klik Reply di Gmail,
       // balasan akan dikirim ke email pengunjung.
