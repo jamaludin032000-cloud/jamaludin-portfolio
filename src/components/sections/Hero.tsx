@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   motion,
   useMotionValue,
-  useSpring,
+  useSpring, 
   useTransform,
   useInView,
   animate,

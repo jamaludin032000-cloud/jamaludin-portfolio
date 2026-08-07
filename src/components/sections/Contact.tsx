@@ -328,21 +328,50 @@ export default function Contact() {
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const form = e.currentTarget;
 
     setStatus("sending");
 
-    setTimeout(() => {
+    const formData = new FormData(form);
+
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      subject: formData.get("subject"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Gagal mengirim pesan.");
+      }
+
       setStatus("sent");
       form.reset();
 
       setTimeout(() => {
         setStatus("idle");
       }, 3000);
-    }, 1200);
+    } catch (error) {
+      console.error(error);
+
+      setStatus("idle");
+
+      alert("Pesan gagal dikirim. Silakan coba lagi.");
+    }
   };
 
   return (
