@@ -1,12 +1,15 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const apiKey = process.env.RESEND_API_KEY;
 
 export async function POST(request: Request) {
   try {
-    // Pastikan API key tersedia
-    if (!process.env.RESEND_API_KEY) {
-      console.error("RESEND_API_KEY belum dikonfigurasi.");
+    // ======================================================
+    // CHECK API KEY
+    // ======================================================
+
+    if (!apiKey) {
+      console.error("RESEND_API_KEY tidak ditemukan.");
 
       return Response.json(
         {
@@ -18,6 +21,12 @@ export async function POST(request: Request) {
       );
     }
 
+    const resend = new Resend(apiKey);
+
+    // ======================================================
+    // READ REQUEST
+    // ======================================================
+
     const body = await request.json();
 
     const name = String(body.name ?? "").trim();
@@ -25,7 +34,10 @@ export async function POST(request: Request) {
     const subject = String(body.subject ?? "").trim();
     const message = String(body.message ?? "").trim();
 
-    // Validasi field
+    // ======================================================
+    // VALIDATION
+    // ======================================================
+
     if (!name || !email || !subject || !message) {
       return Response.json(
         {
@@ -37,7 +49,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validasi email sederhana
+    // ======================================================
+    // EMAIL VALIDATION
+    // ======================================================
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
@@ -51,14 +66,18 @@ export async function POST(request: Request) {
       );
     }
 
+    // ======================================================
+    // SEND EMAIL
+    // ======================================================
+
     const { data, error } = await resend.emails.send({
       from: "Jamaludin Portfolio <onboarding@resend.dev>",
 
-      // Email tujuan kamu
+      // Email tujuan
       to: ["jamaludin032000@gmail.com"],
 
-      // Ketika kamu klik Reply di Gmail,
-      // balasan akan diarahkan ke email pengunjung.
+      // Ketika klik Reply di Gmail,
+      // balasan akan dikirim ke email pengunjung.
       replyTo: email,
 
       subject: `[Portfolio] ${subject}`,
@@ -72,7 +91,6 @@ export async function POST(request: Request) {
               name="viewport"
               content="width=device-width, initial-scale=1.0"
             />
-
             <title>Pesan dari Portfolio Jamaludin</title>
           </head>
 
@@ -175,19 +193,33 @@ export async function POST(request: Request) {
       `,
     });
 
-    // Resend mengembalikan error
+    // ======================================================
+    // RESEND ERROR
+    // ======================================================
+
     if (error) {
-      console.error("Resend error:", error);
+      console.error("=================================");
+      console.error("RESEND ERROR");
+      console.error("=================================");
+      console.error("Name:", error.name);
+      console.error("Message:", error.message);
+      console.error("=================================");
 
       return Response.json(
         {
-          error: "Email gagal dikirim.",
+          error: error.message || "Email gagal dikirim.",
         },
         {
           status: 500,
         }
       );
     }
+
+    // ======================================================
+    // SUCCESS
+    // ======================================================
+
+    console.log("Email berhasil dikirim:", data?.id);
 
     return Response.json(
       {
@@ -200,7 +232,11 @@ export async function POST(request: Request) {
       }
     );
   } catch (error) {
-    console.error("Contact API error:", error);
+    console.error("=================================");
+    console.error("CONTACT API ERROR");
+    console.error("=================================");
+    console.error(error);
+    console.error("=================================");
 
     return Response.json(
       {
@@ -213,10 +249,10 @@ export async function POST(request: Request) {
   }
 }
 
-/**
- * Mencegah HTML injection
- * dari input user yang masuk ke email.
- */
+// ======================================================
+// ESCAPE HTML
+// ======================================================
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
