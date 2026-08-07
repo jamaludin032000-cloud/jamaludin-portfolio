@@ -1,9 +1,12 @@
 "use client";
 
+import { motion, type Variants } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageProvider";
 
-// Icons and raw skill-tag lists stay keyed here — tech names (React.js, Laravel...)
-// and icon paths aren't translated content, only category title/description are.
+// ======================================================
+// CATEGORY META
+// ======================================================
+
 const categoryMeta = {
   frontend: {
     skills: [
@@ -15,47 +18,222 @@ const categoryMeta = {
       "Next.js",
       "Tailwind CSS",
     ],
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
-      />
-    ),
-  },
-  backend: {
-    skills: ["PHP", "Laravel", "Python", "Flask", "REST API", "MySQL"],
+
     icon: (
       <>
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
-          d="M3.75 6.75h16.5a1.5 1.5 0 011.5 1.5v1.5a1.5 1.5 0 01-1.5 1.5H3.75a1.5 1.5 0 01-1.5-1.5v-1.5a1.5 1.5 0 011.5-1.5z"
+          d="M4 5.5A2.5 2.5 0 016.5 3h11A2.5 2.5 0 0120 5.5v13a2.5 2.5 0 01-2.5 2.5h-11A2.5 2.5 0 014 18.5v-13z"
         />
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
-          d="M3.75 13.5h16.5a1.5 1.5 0 011.5 1.5v1.5a1.5 1.5 0 01-1.5 1.5H3.75a1.5 1.5 0 01-1.5-1.5V15a1.5 1.5 0 011.5-1.5z"
-        />
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M6 9.75h.008v.008H6V9.75zM6 16.5h.008v.008H6V16.5z"
+          d="M8 8l-2.5 4L8 16M16 8l2.5 4-2.5 4M13.5 7l-3 10"
         />
       </>
     ),
   },
-  tools: {
-    skills: ["Git", "GitHub", "VS Code", "Postman", "Figma", "Vercel", "Linux"],
+
+  backend: {
+    skills: [
+      "PHP",
+      "Laravel",
+      "Python",
+      "Flask",
+      "REST API",
+      "MySQL",
+    ],
+
     icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
-      />
+      <>
+        <ellipse cx="12" cy="5" rx="8" ry="3" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M4 5v7c0 1.66 3.58 3 8 3s8-1.34 8-3V5"
+        />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M4 12v7c0 1.66 3.58 3 8 3s8-1.34 8-3v-7"
+        />
+      </>
+    ),
+  },
+
+  tools: {
+    skills: [
+      "Git",
+      "GitHub",
+      "VS Code",
+      "Postman",
+      "Figma",
+      "Vercel",
+      "Linux",
+    ],
+
+    icon: (
+      <>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 3v4"
+        />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 17v4"
+        />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M3 12h4"
+        />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M17 12h4"
+        />
+        <circle cx="12" cy="12" r="4" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M5.64 5.64l2.83 2.83M15.53 15.53l2.83 2.83M18.36 5.64l-2.83 2.83M8.47 15.53l-2.83 2.83"
+        />
+      </>
     ),
   },
 } as const;
+
+// ======================================================
+// GRAIN TEXTURE
+// ======================================================
+
+const GRAIN_SVG =
+  "data:image/svg+xml;base64," +
+  btoa(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120">
+      <filter id="n">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.9"
+          numOctaves="2"
+          stitchTiles="stitch"
+        />
+      </filter>
+      <rect width="100%" height="100%" filter="url(#n)" />
+    </svg>`
+  );
+
+// ======================================================
+// ANIMATION VARIANTS
+// ======================================================
+
+const fadeUp: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const fadeUpSlow: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 50,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.85,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const headerVariants: Variants = {
+  hidden: {},
+
+  visible: {
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const cardContainer: Variants = {
+  hidden: {},
+
+  visible: {
+    transition: {
+      staggerChildren: 0.14,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const cardVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 45,
+    scale: 0.96,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const skillContainer: Variants = {
+  hidden: {},
+
+  visible: {
+    transition: {
+      staggerChildren: 0.055,
+      delayChildren: 0.12,
+    },
+  },
+};
+
+const skillVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 10,
+    scale: 0.94,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.4,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+// ======================================================
+// SKILLS
+// ======================================================
 
 export default function Skills() {
   const { t } = useLanguage();
@@ -69,37 +247,251 @@ export default function Skills() {
   }));
 
   return (
-    <section className="relative bg-slate-950 py-28">
-      <div className="mx-auto max-w-7xl px-6">
-        {/* Header */}
-        <div className="text-center">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/3 px-4 py-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-300" />
-            <span className="text-xs font-medium uppercase tracking-[0.25em] text-amber-200/90">
-              {t.skills.badge}
-            </span>
-          </div>
+    <section
+      id="skills"
+      className="relative overflow-hidden bg-[#0A0A0F]"
+    >
+      {/* ==================================================
+          BACKGROUND
+      ================================================== */}
 
-          <h2 className="font-display text-4xl font-semibold text-white lg:text-5xl">
-            {t.skills.heading}
-          </h2>
+      {/* Mesh Gradient */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 800px 500px at 15% 20%, rgba(232,196,104,0.10), transparent 60%), radial-gradient(ellipse 700px 500px at 85% 75%, rgba(94,234,212,0.07), transparent 60%)",
+        }}
+      />
 
-          <div className="mx-auto mt-5 h-px w-24 bg-linear-to-r from-transparent via-amber-300 to-transparent" />
-        </div>
+      {/* Dot Grid */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.15]"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(255,255,255,0.35) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
 
-        {/* Categories */}
-        <div className="mt-16 grid gap-6 lg:grid-cols-3">
-          {categories.map((category) => (
-            <div
-              key={category.key}
+      {/* Grain */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
+        style={{
+          backgroundImage: `url(${GRAIN_SVG})`,
+        }}
+      />
+
+      {/* ==================================================
+          CONTENT
+      ================================================== */}
+
+      <div
+        className="
+          relative
+          z-10
+          mx-auto
+          max-w-7xl
+          px-6
+          py-28
+          lg:px-12
+        "
+      >
+        {/* ==================================================
+            HEADER
+        ================================================== */}
+
+        <motion.div
+          variants={headerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.3,
+          }}
+          className="mb-16 text-center"
+        >
+          {/* Badge */}
+
+          <motion.div
+            variants={fadeUp}
+            className="
+              mb-5
+              inline-flex
+              items-center
+              gap-2
+              rounded-full
+              border
+              border-[#E8C468]/20
+              bg-[#E8C468]/4
+              px-4
+              py-1.5
+            "
+          >
+            <motion.span
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.7, 1, 0.7],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
               className="
-                group rounded-2xl border border-white/10 bg-white/3 p-8
-                transition-all duration-300
-                hover:-translate-y-1 hover:border-amber-300/30 hover:bg-white/5
+                h-1.5
+                w-1.5
+                rounded-full
+                bg-[#E8C468]
+              "
+            />
+
+            <span
+              className="
+                text-xs
+                font-medium
+                uppercase
+                tracking-[0.25em]
+                text-[#E8C468]/90
               "
             >
-              <div className="mb-6 flex items-start justify-between">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-amber-300/20 bg-amber-300/5 text-amber-200 transition-colors duration-300 group-hover:border-amber-300/40">
+              {t.skills.badge}
+            </span>
+          </motion.div>
+
+          {/* Heading */}
+
+          <motion.h2
+            variants={fadeUpSlow}
+            className="
+              font-display
+              text-4xl
+              font-semibold
+              text-white
+              lg:text-5xl
+            "
+          >
+            {t.skills.heading}
+          </motion.h2>
+
+          {/* Divider */}
+
+          <motion.div
+            variants={fadeUp}
+            className="
+              mx-auto
+              mt-5
+              h-px
+              w-24
+              bg-linear-to-r
+              from-transparent
+              via-[#E8C468]
+              to-transparent
+            "
+          />
+        </motion.div>
+
+        {/* ==================================================
+            CATEGORIES
+        ================================================== */}
+
+        <motion.div
+          variants={cardContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.15,
+          }}
+          className="
+            grid
+            gap-6
+            lg:grid-cols-3
+          "
+        >
+          {categories.map((category) => (
+            <motion.div
+              key={category.key}
+              variants={cardVariants}
+              whileHover={{
+                y: -7,
+                transition: {
+                  duration: 0.25,
+                  ease: "easeOut",
+                },
+              }}
+              className="
+                group
+                relative
+                overflow-hidden
+                rounded-2xl
+                border
+                border-white/10
+                bg-white/3
+                p-8
+                transition-all
+                duration-300
+                hover:border-[#E8C468]/30
+                hover:bg-white/5
+                hover:shadow-lg
+                hover:shadow-[rgba(232,196,104,0.1)]
+              "
+            >
+              {/* ==================================================
+                  HOVER GLOW
+              ================================================== */}
+
+              <div
+                className="
+                  pointer-events-none
+                  absolute
+                  -right-16
+                  -top-16
+                  h-32
+                  w-32
+                  rounded-full
+                  bg-[#E8C468]/0
+                  blur-3xl
+                  transition-all
+                  duration-500
+                  group-hover:bg-[#E8C468]/10
+                "
+              />
+
+              {/* ==================================================
+                  CARD HEADER
+              ================================================== */}
+
+              <div className="relative mb-6 flex items-start justify-between">
+                {/* Icon */}
+
+                <motion.div
+                  whileHover={{
+                    rotate: -5,
+                    scale: 1.08,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 15,
+                  }}
+                  className="
+                    flex
+                    h-11
+                    w-11
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    border-[#E8C468]/20
+                    bg-[#E8C468]/5
+                    text-[#E8C468]
+                    transition-all
+                    duration-300
+                    group-hover:border-[#E8C468]/40
+                    group-hover:bg-[#E8C468]/10
+                  "
+                >
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -109,39 +501,132 @@ export default function Skills() {
                   >
                     {category.icon}
                   </svg>
-                </div>
+                </motion.div>
 
-                <span className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] font-medium text-slate-500">
+                {/* Skill Count */}
+
+                <span
+                  className="
+                    rounded-full
+                    border
+                    border-white/10
+                    bg-white/2
+                    px-2.5
+                    py-1
+                    text-[11px]
+                    font-medium
+                    text-slate-500
+                    transition-all
+                    duration-300
+                    group-hover:border-[#E8C468]/20
+                    group-hover:bg-[#E8C468]/5
+                    group-hover:text-slate-400
+                  "
+                >
                   {category.skills.length} {t.skills.countSuffix}
                 </span>
               </div>
 
-              <h3 className="font-display text-xl font-semibold text-white">
+              {/* ==================================================
+                  TITLE
+              ================================================== */}
+
+              <h3
+                className="
+                  relative
+                  font-display
+                  text-xl
+                  font-semibold
+                  text-white
+                "
+              >
                 {category.title}
               </h3>
 
-              <p className="mt-1.5 text-sm text-slate-500">
+              {/* Description */}
+
+              <p
+                className="
+                  relative
+                  mt-1.5
+                  text-sm
+                  leading-6
+                  text-slate-500
+                "
+              >
                 {category.description}
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-2.5">
+              {/* ==================================================
+                  SKILLS
+              ================================================== */}
+
+              <motion.div
+                variants={skillContainer}
+                className="
+                  relative
+                  mt-6
+                  flex
+                  flex-wrap
+                  gap-2.5
+                "
+              >
                 {category.skills.map((skill) => (
-                  <span
+                  <motion.span
                     key={skill}
+                    variants={skillVariants}
+                    whileHover={{
+                      y: -2,
+                      scale: 1.04,
+                    }}
                     className="
-                      rounded-full border border-white/10 bg-white/3 px-3.5 py-1.5
-                      text-xs font-medium text-slate-300
-                      transition-all duration-300
-                      hover:border-amber-300/40 hover:text-amber-200
+                      cursor-default
+                      rounded-full
+                      border
+                      border-white/10
+                      bg-white/3
+                      px-3.5
+                      py-1.5
+                      text-xs
+                      font-medium
+                      text-slate-300
+                      transition-all
+                      duration-300
+                      hover:border-[#E8C468]/40
+                      hover:bg-[#E8C468]/5
+                      hover:text-[#E8C468]
                     "
                   >
                     {skill}
-                  </span>
+                  </motion.span>
                 ))}
-              </div>
-            </div>
+              </motion.div>
+
+              {/* ==================================================
+                  BOTTOM ACCENT
+              ================================================== */}
+
+              <div
+                className="
+                  absolute
+                  bottom-0
+                  left-8
+                  right-8
+                  h-px
+                  origin-left
+                  scale-x-0
+                  bg-linear-to-r
+                  from-[#E8C468]
+                  via-[#5EEAD4]
+                  to-transparent
+                  transition-transform
+                  duration-500
+                  group-hover:scale-x-100
+                "
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

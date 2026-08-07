@@ -2,23 +2,44 @@
 
 import { useLanguage } from "@/lib/LanguageProvider";
 
+// Grain texture — premium detail matching all sections
+const GRAIN_SVG =
+  "data:image/svg+xml;base64," +
+  btoa(
+    `<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>`
+  );
+
 function AwardIcon() {
   return (
     <>
-      <path
+      {/* Medal */}
+      <circle
+        cx="12"
+        cy="9"
+        r="5.25"
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M16.5 18.75h-9A2.25 2.25 0 015.25 16.5v-9A2.25 2.25 0 017.5 5.25h9a2.25 2.25 0 012.25 2.25v9a2.25 2.25 0 01-2.25 2.25z"
       />
+
+      {/* Star inside medal */}
       <path
+        d="M12 6.5l.8 1.65 1.82.26-1.31 1.28.31 1.81L12 10.65l-1.62.85.31-1.81-1.31-1.28 1.82-.26L12 6.5Z"
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M9.75 10.5l2.25-2.25 2.25 2.25"
       />
+
+      {/* Left ribbon */}
       <path
+        d="M8.5 13.1 7.25 20l4.75-2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M12 8.25v7.5"
+      />
+
+      {/* Right ribbon */}
+      <path
+        d="M15.5 13.1 16.75 20 12 17.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </>
   );
@@ -32,23 +53,50 @@ export default function Certificates() {
   return (
     <section
       id="certificates"
-      className="relative py-24"
+      className="relative overflow-hidden bg-[#0A0A0F] py-28"
     >
-      <div className="mx-auto max-w-7xl px-6">
+      {/* Mesh gradient backdrop — matching Hero, About, Skills, Experience, Projects & Education */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 800px 500px at 15% 20%, rgba(232,196,104,0.10), transparent 60%), radial-gradient(ellipse 700px 500px at 85% 75%, rgba(94,234,212,0.07), transparent 60%)",
+        }}
+      />
+      {/* Dot grid texture */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.15]"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(255,255,255,0.35) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
+      {/* Grain */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
+        style={{ backgroundImage: `url(${GRAIN_SVG})` }}
+      />
 
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12">
         {/* Header */}
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-1.5 text-sm font-medium text-amber-200">
-            {t.certificates.badge}
-          </span>
+        <div className="mb-16 mx-auto max-w-3xl text-center">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#E8C468]/20 bg-[#E8C468]/4 px-4 py-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#E8C468]" />
+            <span className="text-xs font-medium uppercase tracking-[0.25em] text-[#E8C468]/90">
+              {t.certificates.badge}
+            </span>
+          </div>
 
-          <h2 className="mt-6 font-display text-4xl font-semibold text-white lg:text-5xl">
+          <h2 className="font-display text-4xl font-semibold text-white lg:text-5xl">
             {t.certificates.title}
           </h2>
 
           <p className="mx-auto mt-6 max-w-2xl text-slate-400">
             {t.certificates.subtitle}
           </p>
+
+          <div className="mx-auto mt-8 h-px w-24 bg-linear-to-r from-transparent via-[#E8C468] to-transparent" />
         </div>
 
         {/* Grid */}
@@ -59,18 +107,19 @@ export default function Certificates() {
               className="
                 group relative overflow-hidden rounded-2xl
                 border border-white/10
-                bg-white/5
+                bg-white/3
                 p-8
                 transition-all duration-300
                 hover:-translate-y-1.5
-                hover:border-amber-300/30
-                hover:bg-white/10
+                hover:border-[#E8C468]/30
+                hover:bg-white/5
+                hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)]
               "
             >
-              <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-amber-400/0 blur-2xl transition-colors duration-500 group-hover:bg-amber-400/10" />
+              <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#E8C468]/0 blur-2xl transition-colors duration-500 group-hover:bg-[#E8C468]/10" />
 
               <div className="flex items-start justify-between gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-amber-300/20 bg-amber-300/5 text-amber-200 transition-colors duration-300 group-hover:border-amber-300/40">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#E8C468]/20 bg-[#E8C468]/5 text-[#E8C468] transition-all duration-300 group-hover:border-[#E8C468]/40 group-hover:bg-[#E8C468]/10">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -82,7 +131,7 @@ export default function Certificates() {
                   </svg>
                 </div>
 
-                <span className="shrink-0 rounded-full border border-white/10 bg-white/5 px-3.5 py-1 text-xs font-semibold text-slate-300">
+                <span className="shrink-0 rounded-full border border-white/10 bg-white/3 px-3.5 py-1 text-xs font-semibold text-slate-300 transition-all duration-300 group-hover:border-[#E8C468]/20 group-hover:bg-[#E8C468]/5 group-hover:text-slate-200">
                   {certificate.year}
                 </span>
               </div>
@@ -92,12 +141,12 @@ export default function Certificates() {
               </h3>
 
               <div className="mt-2 flex items-center gap-2">
-                <p className="text-sm font-medium text-amber-200">
+                <p className="text-sm font-medium text-[#E8C468]">
                   {certificate.issuer}
                 </p>
 
                 {certificate.verified && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-300">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#5EEAD4]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#5EEAD4] transition-all duration-300 group-hover:bg-[#5EEAD4]/15">
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"

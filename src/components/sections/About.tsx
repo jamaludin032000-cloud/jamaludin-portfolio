@@ -1,9 +1,12 @@
 "use client";
 
+import { motion, type Variants } from "framer-motion";
 import { useLanguage } from "@/lib/LanguageProvider";
 
-// Icons stay keyed here (not in the dictionary) since SVG paths aren't
-// translatable content — only the label/value text moves through `t`.
+// ======================================================
+// ICONS
+// ======================================================
+
 const iconByKey = {
   name: (
     <path
@@ -12,131 +15,579 @@ const iconByKey = {
       d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 0115 0"
     />
   ),
+
   location: (
     <>
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+        d="M12 21s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"
+      />
+      <circle cx="12" cy="9" r="2.25" />
+    </>
+  ),
+
+  email: (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 7l9 6 9-6"
+      />
+    </>
+  ),
+
+  education: (
+    <>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 10l9-5 9 5-9 5-9-5z"
       />
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M19.5 10.5c0 7.5-7.5 11.25-7.5 11.25S4.5 18 4.5 10.5a7.5 7.5 0 1115 0z"
+        d="M7 12.5V16c2.8 2 7.2 2 10 0v-3.5"
       />
     </>
   ),
-  email: (
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M2.25 6.75l9 6.5 9-6.5M4.5 19.5h15a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5h-15A1.5 1.5 0 003 6v12a1.5 1.5 0 001.5 1.5z"
-    />
-  ),
-  education: (
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M4.26 10.147a60.44 60.44 0 00-.491 6.347A48.62 48.62 0 0112 20.904a48.62 48.62 0 018.232-4.41 60.46 60.46 0 00-.491-6.347M4.26 10.147a48.47 48.47 0 011.184-.513M4.26 10.147L12 13.5l7.74-3.353M4.26 10.147l7.74 3.353M19.74 10.147L12 3 4.26 10.147"
-    />
-  ),
+
   experience: (
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25M9 8.25l3-3m0 0l3 3m-3-3v10.5M3.75 14.15c1.892.578 3.937.89 6.06.909m10.44-.909c-1.892.578-3.937.89-6.06.909"
-    />
+    <>
+      <rect x="3" y="7" width="18" height="13" rx="2" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 12h18"
+      />
+    </>
   ),
+
   status: (
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-    />
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8.5 12l2.3 2.3 4.7-5"
+      />
+    </>
   ),
 } as const;
+
+// ======================================================
+// GRAIN TEXTURE
+// ======================================================
+
+const GRAIN_SVG =
+  "data:image/svg+xml;base64," +
+  btoa(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120">
+      <filter id="n">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.9"
+          numOctaves="2"
+          stitchTiles="stitch"
+        />
+      </filter>
+      <rect width="100%" height="100%" filter="url(#n)"/>
+    </svg>`
+  );
+
+// ======================================================
+// ANIMATION
+// ======================================================
+
+const fadeUp: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const fadeUpSlow: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 50,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.85,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const staggerContainer: Variants = {
+  hidden: {},
+
+  visible: {
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const paragraphContainer: Variants = {
+  hidden: {},
+
+  visible: {
+    transition: {
+      staggerChildren: 0.14,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+const cardContainer: Variants = {
+  hidden: {},
+
+  visible: {
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const cardVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+    scale: 0.97,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.65,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const tagContainer: Variants = {
+  hidden: {},
+
+  visible: {
+    transition: {
+      staggerChildren: 0.06,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const tagVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 12,
+    scale: 0.94,
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.4,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+// ======================================================
+// ABOUT
+// ======================================================
 
 export default function About() {
   const { t } = useLanguage();
 
   const infoItems = [
-    { key: "name", ...t.about.info.name },
-    { key: "location", ...t.about.info.location },
-    { key: "email", ...t.about.info.email, truncate: true },
-    { key: "education", ...t.about.info.education },
-    { key: "experience", ...t.about.info.experience },
-    { key: "status", ...t.about.info.status, accent: true },
+    {
+      key: "name",
+      ...t.about.info.name,
+    },
+    {
+      key: "location",
+      ...t.about.info.location,
+    },
+    {
+      key: "email",
+      ...t.about.info.email,
+      truncate: true,
+    },
+    {
+      key: "education",
+      ...t.about.info.education,
+    },
+    {
+      key: "experience",
+      ...t.about.info.experience,
+    },
+    {
+      key: "status",
+      ...t.about.info.status,
+      accent: true,
+    },
   ] as const;
 
   return (
-    <section className="relative bg-slate-900/60 py-28">
-      <div className="mx-auto max-w-7xl px-6">
-        {/* Header */}
-        <div className="mb-16 text-center">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/3 px-4 py-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-300" />
-            <span className="text-xs font-medium uppercase tracking-[0.25em] text-amber-200/90">
+    <section
+      id="about"
+      className="relative overflow-hidden bg-[#0A0A0F]"
+    >
+      {/* ==================================================
+          BACKGROUND
+      ================================================== */}
+
+      {/* Mesh Gradient */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 800px 500px at 15% 20%, rgba(232,196,104,0.10), transparent 60%), radial-gradient(ellipse 700px 500px at 85% 75%, rgba(94,234,212,0.07), transparent 60%)",
+        }}
+      />
+
+      {/* Dot Grid */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.15]"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(255,255,255,0.35) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
+
+      {/* Grain */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
+        style={{
+          backgroundImage: `url(${GRAIN_SVG})`,
+        }}
+      />
+
+      {/* ==================================================
+          CONTENT
+      ================================================== */}
+
+      <div
+        className="
+          relative
+          z-10
+          mx-auto
+          max-w-7xl
+          px-6
+          py-28
+          lg:px-12
+        "
+      >
+        {/* ==================================================
+            HEADER
+        ================================================== */}
+
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.3,
+          }}
+          className="mb-16 text-center"
+        >
+          {/* Badge */}
+
+          <motion.div
+            variants={fadeUp}
+            className="
+              mb-5
+              inline-flex
+              items-center
+              gap-2
+              rounded-full
+              border
+              border-[#E8C468]/20
+              bg-[#E8C468]/4
+              px-4
+              py-1.5
+            "
+          >
+            <motion.span
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.7, 1, 0.7],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="
+                h-1.5
+                w-1.5
+                rounded-full
+                bg-[#E8C468]
+              "
+            />
+
+            <span
+              className="
+                text-xs
+                font-medium
+                uppercase
+                tracking-[0.25em]
+                text-[#E8C468]/90
+              "
+            >
               {t.about.badge}
             </span>
-          </div>
+          </motion.div>
 
-          <h2 className="font-display text-4xl font-semibold text-white lg:text-5xl">
+          {/* Heading */}
+
+          <motion.h2
+            variants={fadeUpSlow}
+            className="
+              font-display
+              text-4xl
+              font-semibold
+              text-white
+              lg:text-5xl
+            "
+          >
             {t.about.heading}
-          </h2>
+          </motion.h2>
 
-          <div className="mx-auto mt-5 h-px w-24 bg-linear-to-r from-transparent via-amber-300 to-transparent" />
-        </div>
+          {/* Divider */}
+
+          <motion.div
+            variants={fadeUp}
+            className="
+              mx-auto
+              mt-5
+              h-px
+              w-24
+              bg-linear-to-r
+              from-transparent
+              via-[#E8C468]
+              to-transparent
+            "
+          />
+        </motion.div>
+
+        {/* ==================================================
+            MAIN CONTENT
+        ================================================== */}
 
         <div className="grid gap-16 lg:grid-cols-2">
-          {/* KIRI */}
-          <div>
-            <h3 className="font-display text-2xl font-semibold text-white lg:text-3xl">
+
+          {/* ==================================================
+              LEFT COLUMN
+          ================================================== */}
+
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+          >
+            {/* Subheading */}
+
+            <motion.h3
+              variants={fadeUpSlow}
+              className="
+                font-display
+                text-2xl
+                font-semibold
+                text-white
+                lg:text-3xl
+              "
+            >
               {t.about.subheading}
-            </h3>
+            </motion.h3>
 
-            {t.about.paragraphs.map((paragraph, index) => (
-              <p
-                key={index}
-                className={`leading-8 text-slate-400 ${
-                  index === 0 ? "mt-6" : "mt-5"
-                }`}
-              >
-                {paragraph}
-              </p>
-            ))}
+            {/* Paragraphs */}
 
-            {/* Focus areas as quiet tags — encodes real scope, not decoration */}
-            <div className="mt-8 flex flex-wrap gap-2">
+            <motion.div
+              variants={paragraphContainer}
+              className="mt-6 space-y-5"
+            >
+              {t.about.paragraphs.map((paragraph, index) => (
+                <motion.p
+                  key={index}
+                  variants={fadeUp}
+                  className="
+                    leading-8
+                    text-slate-400
+                  "
+                >
+                  {paragraph}
+                </motion.p>
+              ))}
+            </motion.div>
+
+            {/* Focus Areas */}
+
+            <motion.div
+              variants={tagContainer}
+              className="
+                mt-8
+                flex
+                flex-wrap
+                gap-2
+              "
+            >
               {t.about.focusAreas.map((tag) => (
-                <span
+                <motion.span
                   key={tag}
-                  className="rounded-full border border-white/10 bg-white/3 px-3.5 py-1.5 text-xs font-medium text-slate-300"
+                  variants={tagVariants}
+                  whileHover={{
+                    y: -3,
+                    scale: 1.04,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 18,
+                  }}
+                  className="
+                    cursor-default
+                    rounded-full
+                    border
+                    border-white/10
+                    bg-white/3
+                    px-3.5
+                    py-1.5
+                    text-xs
+                    font-medium
+                    text-slate-300
+                    transition-colors
+                    duration-300
+                    hover:border-[#E8C468]/30
+                    hover:bg-[#E8C468]/5
+                    hover:text-[#E8C468]
+                  "
                 >
                   {tag}
-                </span>
+                </motion.span>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          {/* KANAN */}
-          <div className="grid gap-4 sm:grid-cols-2">
+          {/* ==================================================
+              RIGHT COLUMN
+          ================================================== */}
+
+          <motion.div
+            variants={cardContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{
+              once: true,
+              amount: 0.15,
+            }}
+            className="
+              grid
+              gap-4
+              sm:grid-cols-2
+            "
+          >
             {infoItems.map((item) => (
-              <div
+              <motion.div
                 key={item.key}
+                variants={cardVariants}
+                whileHover={{
+                  y: -6,
+                  transition: {
+                    duration: 0.25,
+                    ease: "easeOut",
+                  },
+                }}
                 className="
-                  group rounded-2xl border border-white/10 bg-white/3 p-6
-                  transition-all duration-300
-                  hover:border-amber-300/30 hover:bg-white/5
+                  group
+                  relative
+                  overflow-hidden
+                  rounded-2xl
+                  border
+                  border-white/10
+                  bg-white/3
+                  p-6
+                  transition-all
+                  duration-300
+                  hover:border-[#E8C468]/30
+                  hover:bg-white/5
+                  hover:shadow-lg
+                  hover:shadow-[rgba(232,196,104,0.1)]
                 "
               >
+                {/* Hover Glow */}
+
                 <div
+                  className="
+                    pointer-events-none
+                    absolute
+                    -right-10
+                    -top-10
+                    h-24
+                    w-24
+                    rounded-full
+                    bg-[#E8C468]/0
+                    blur-3xl
+                    transition-all
+                    duration-500
+                    group-hover:bg-[#E8C468]/10
+                  "
+                />
+
+                {/* Icon */}
+
+                <motion.div
+                  whileHover={{
+                    rotate: -4,
+                    scale: 1.08,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 15,
+                  }}
                   className={`
-                    mb-4 flex h-10 w-10 items-center justify-center rounded-xl border
-                    transition-colors duration-300
+                    relative
+                    mb-4
+                    flex
+                    h-10
+                    w-10
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    transition-all
+                    duration-300
                     ${
                       "accent" in item && item.accent
-                        ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
-                        : "border-amber-300/20 bg-amber-300/5 text-amber-200 group-hover:border-amber-300/40"
+                        ? "border-[#5EEAD4]/30 bg-[#5EEAD4]/10 text-[#5EEAD4] group-hover:border-[#5EEAD4]/50 group-hover:bg-[#5EEAD4]/15"
+                        : "border-[#E8C468]/20 bg-[#E8C468]/5 text-[#E8C468] group-hover:border-[#E8C468]/40 group-hover:bg-[#E8C468]/10"
                     }
                   `}
                 >
@@ -149,24 +600,46 @@ export default function About() {
                   >
                     {iconByKey[item.key]}
                   </svg>
-                </div>
+                </motion.div>
 
-                <h4 className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                {/* Label */}
+
+                <h4
+                  className="
+                    mb-1.5
+                    text-xs
+                    font-semibold
+                    uppercase
+                    tracking-wider
+                    text-slate-500
+                  "
+                >
                   {item.label}
                 </h4>
 
+                {/* Value */}
+
                 <p
-                  className={`text-sm font-medium ${
-                    "accent" in item && item.accent
-                      ? "text-emerald-300"
-                      : "text-slate-200"
-                  } ${"truncate" in item && item.truncate ? "break-all" : ""}`}
+                  className={`
+                    text-sm
+                    font-medium
+                    ${
+                      "accent" in item && item.accent
+                        ? "text-[#5EEAD4]"
+                        : "text-slate-200"
+                    }
+                    ${
+                      "truncate" in item && item.truncate
+                        ? "break-all"
+                        : ""
+                    }
+                  `}
                 >
                   {item.value}
                 </p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

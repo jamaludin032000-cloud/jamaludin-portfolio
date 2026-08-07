@@ -16,7 +16,8 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
 });
 
-const SITE_URL = "https://example.com";
+// URL website portfolio
+const SITE_URL = "https://jamaludin-portfolio.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -27,51 +28,128 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Portfolio resmi Jamaludin - Full Stack Web Developer.",
+    "Portfolio resmi Jamaludin - Full Stack Web Developer yang membangun website dan aplikasi web modern, responsif, dan scalable.",
+
+  keywords: [
+    "Jamaludin",
+    "Full Stack Web Developer",
+    "Web Developer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Next.js",
+    "React",
+    "Laravel",
+    "CodeIgniter",
+    "TypeScript",
+    "Tailwind CSS",
+    "Python",
+    "PHP",
+    "Portfolio",
+  ],
+
+  authors: [
+    {
+      name: "Jamaludin",
+      url: SITE_URL,
+    },
+  ],
+
+  creator: "Jamaludin",
+  publisher: "Jamaludin",
+
+  alternates: {
+    canonical: SITE_URL,
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 
   openGraph: {
     title: "Jamaludin | Full Stack Web Developer",
-    description: "Portfolio resmi Jamaludin.",
+
+    description:
+      "Portfolio resmi Jamaludin - Full Stack Web Developer.",
+
     url: SITE_URL,
+
     siteName: "Jamaludin Portfolio",
+
     locale: "id_ID",
+
     type: "website",
+
     images: [
       {
-        url: "/og-image.png",
+        url: "/images/Logo.png",
         width: 1200,
         height: 630,
-        alt: "Jamaludin",
+        alt: "Jamaludin | Full Stack Web Developer",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
+
     title: "Jamaludin | Full Stack Web Developer",
-    description: "Portfolio resmi Jamaludin.",
-    images: ["/og-image.png"],
+
+    description:
+      "Portfolio resmi Jamaludin - Full Stack Web Developer.",
+
+    images: ["/images/Logo.png"],
+  },
+
+  icons: {
+    icon: "/images/Logo.png",
+    shortcut: "/images/Logo.png",
+    apple: "/images/Logo.png",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#020617",
+  themeColor: "#0A0A0F",
   colorScheme: "dark",
 };
 
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
+
   name: "Jamaludin",
+
   url: SITE_URL,
+
   jobTitle: "Full Stack Web Developer",
+
+  description:
+    "Jamaludin adalah Full Stack Web Developer yang membangun website dan aplikasi web modern.",
+
   knowsAbout: [
     "Next.js",
-    "Laravel",
     "React",
+    "Laravel",
+    "CodeIgniter",
     "TypeScript",
+    "JavaScript",
     "Tailwind CSS",
     "Python",
+    "PHP",
+    "PostgreSQL",
+    "Node.js",
+  ],
+
+  sameAs: [
+    "https://github.com/jamaludin032000-cloud",
+    "https://www.linkedin.com/in/jamal-udin-6aa5b3335/",
   ],
 };
 
@@ -86,7 +164,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable} scroll-smooth`}
     >
-      <body>
+      <body className="bg-[#0A0A0F] font-sans text-white antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -94,9 +172,7 @@ export default function RootLayout({
           }}
         />
 
-        <LanguageProvider>
-          {children}
-        </LanguageProvider>
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

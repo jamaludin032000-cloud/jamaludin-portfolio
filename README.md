@@ -17,16 +17,16 @@ A modern responsive portfolio website to showcase my profile, skills, projects, 
 ## 📸 Preview
 
 ### Home
-![Home Preview](./public/screenshots/home.png)
+![Home Preview](./public/screenshots/home1.png)
 
 ### About
-![About Preview](./public/screenshots/about.png)
+![About Preview](./public/screenshots/about1.png)
 
 ### Projects
-![Projects Preview](./public/screenshots/projects.png)
+![Projects Preview](./public/screenshots/projects1.png)
 
 ### Contact
-![Contact Preview](./public/screenshots/contact.png)
+![Contact Preview](./public/screenshots/contact1.png)
 
 ---
 
