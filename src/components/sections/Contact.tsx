@@ -398,7 +398,7 @@ export default function Contact() {
       />
 
       <motion.div
-        className="pointer-events-none absolute bottom-[15%] right-[8%] h-64 w-64 rounded-full bg-[#5EEAD4]/[0.025] blur-[100px]"
+        className="pointer-events-none absolute bottom-[15%] right-[8%] h-64 w-64 rounded-full bg-[#5EEAD4]/2.5 blur-[100px]"
         aria-hidden="true"
         animate={{
           x: [0, -40, 0],
@@ -466,7 +466,7 @@ export default function Contact() {
 
           <motion.div
             variants={fadeUp}
-            className="mx-auto mt-8 h-px w-24 bg-gradient-to-r from-transparent via-[#E8C468] to-transparent"
+            className="mx-auto mt-8 h-px w-24 bg-linear-to-r from-transparent via-[#E8C468] to-transparent"
           />
         </motion.div>
 
@@ -497,7 +497,7 @@ export default function Contact() {
                   ease: "easeOut",
                 },
               }}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-2 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/[0.05] hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)]"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-2 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/5 hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)]"
             >
               <div
                 className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#E8C468]/0 blur-3xl transition-all duration-500 group-hover:bg-[#E8C468]/10"
@@ -574,7 +574,7 @@ export default function Contact() {
               ))}
 
               <div
-                className="absolute bottom-0 left-8 right-8 h-px origin-left scale-x-0 bg-gradient-to-r from-[#E8C468] via-[#5EEAD4] to-transparent transition-transform duration-500 group-hover:scale-x-100"
+                className="absolute bottom-0 left-8 right-8 h-px origin-left scale-x-0 bg-linear-to-r from-[#E8C468] via-[#5EEAD4] to-transparent transition-transform duration-500 group-hover:scale-x-100"
                 aria-hidden="true"
               />
             </motion.div>
@@ -589,7 +589,7 @@ export default function Contact() {
                   duration: 0.25,
                 },
               }}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/[0.05] hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)]"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/3 p-6 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/5 hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)]"
             >
               <p className="mb-4 text-xs uppercase tracking-wider text-slate-500">
                 {t.contact.socials}
@@ -622,7 +622,7 @@ export default function Contact() {
               </motion.div>
 
               <div
-                className="absolute bottom-0 left-6 right-6 h-px origin-left scale-x-0 bg-gradient-to-r from-[#E8C468] via-[#5EEAD4] to-transparent transition-transform duration-500 group-hover:scale-x-100"
+                className="absolute bottom-0 left-6 right-6 h-px origin-left scale-x-0 bg-linear-to-r from-[#E8C468] via-[#5EEAD4] to-transparent transition-transform duration-500 group-hover:scale-x-100"
                 aria-hidden="true"
               />
             </motion.div>
@@ -633,7 +633,7 @@ export default function Contact() {
           <motion.form
             variants={cardVariants}
             onSubmit={handleSubmit}
-            className="group relative overflow-hidden space-y-5 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/[0.05] hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)] sm:p-8 lg:col-span-3"
+            className="group relative overflow-hidden space-y-5 rounded-2xl border border-white/10 bg-white/3 p-6 transition-all duration-300 hover:border-[#E8C468]/30 hover:bg-white/5 hover:shadow-lg hover:shadow-[rgba(232,196,104,0.1)] sm:p-8 lg:col-span-3"
           >
             <div
               className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-[#E8C468]/0 blur-3xl transition-all duration-500 group-hover:bg-[#E8C468]/10"
@@ -754,7 +754,7 @@ export default function Contact() {
             </div>
 
             <div
-              className="absolute bottom-0 left-8 right-8 h-px origin-left scale-x-0 bg-gradient-to-r from-[#E8C468] via-[#5EEAD4] to-transparent transition-transform duration-500 group-hover:scale-x-100"
+              className="absolute bottom-0 left-8 right-8 h-px origin-left scale-x-0 bg-linear-to-r from-[#E8C468] via-[#5EEAD4] to-transparent transition-transform duration-500 group-hover:scale-x-100"
               aria-hidden="true"
             />
           </motion.form>
